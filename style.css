@@ -1,0 +1,924 @@
+/* =====================================================================
+   ROYAL BAGS — STYLE.CSS
+   Order of this file (matches index.html from top to bottom):
+     0. Variables, reset and shared styles
+     1. Header
+     2. Hero
+     3. New Arrivals
+     4. Promo split (video + customer photo gallery)
+     5. Feature strip
+     6. Reviews
+     7. Footer
+     8. Unused styles
+     9. Tablet  (768px and up)   — same section order
+    10. Desktop (1024px and up)  — same section order
+    11. Reduced motion           — same section order
+   ===================================================================== */
+
+
+/* =====================================================================
+   0. VARIABLES, RESET AND SHARED STYLES
+   (colours, fonts, body, headings, focus ring, buttons used by many sections)
+   ===================================================================== */
+:root {
+    --pink: #E7B0DE;
+    --purple: #400849;
+    --orange: #FF5A0A;
+    --blush: #FBF1F8;
+    --muted: #6b4a72;
+    --line: #E3CFE0;
+    --photo-bg: #8a5a2e; /* matches the brown backdrop of the hero photo */
+
+    --font-serif: "Cormorant Garamond", serif;
+    --font-sans: 'Inter', system-ui, sans-serif;
+
+    --header-h: 56px;
+    --tap: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+/* sticky header must not cover anchor targets */
+[id] { scroll-margin-top: var(--header-h); }
+
+body {
+    margin: 0;
+    background: var(--blush);
+    color: var(--purple);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; display: block; }
+
+h1, h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+}
+
+:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+}
+
+.foot :focus-visible,
+.category :focus-visible { outline-color: var(--pink); }
+
+/* Shared button (used in Hero and Footer) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--tap);
+    padding: 0 1.5rem;
+    margin: 0;
+    background: var(--orange);
+    color: var(--purple);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+    border: 1.5px solid var(--orange);
+    border-radius: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.btn:hover { background: var(--purple); border-color: var(--purple); color: var(--pink); }
+
+.btn--outline {
+    background: transparent;
+    border-color: var(--purple);
+    color: var(--purple);
+}
+
+.btn--outline:hover { background: var(--purple); color: var(--pink); }
+
+
+/* =====================================================================
+   1. HEADER  (<header class="site-head">: menu button, nav, logo, order link)
+   ===================================================================== */
+.site-head {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: var(--header-h);
+    padding: 0 1rem;
+    background: var(--blush);
+    border-bottom: 1px solid var(--line);
+}
+
+.menu-btn {
+    justify-self: start;
+    position: relative;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.menu-btn_burger,
+.menu-btn_burger::before,
+.menu-btn_burger::after {
+    position: absolute;
+    left: 12px;
+    width: 20px;
+    height: 2px;
+    background: var(--purple);
+    transition: transform .25s, top .25s, background .25s;
+}
+
+.menu-btn_burger { display: block; top: 21px; }
+.menu-btn_burger::before { content: ""; top: -6px; left: 0; }
+.menu-btn_burger::after  { content: ""; top: 6px;  left: 0; }
+
+/* burger turns into an X when the menu is open */
+.menu-btn[aria-expanded="true"] .menu-btn_burger { background: transparent; }
+.menu-btn[aria-expanded="true"] .menu-btn_burger::before { top: 0; transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] .menu-btn_burger::after  { top: 0; transform: rotate(-45deg); }
+
+/* dropdown menu: absolutely positioned so it never becomes a 4th grid cell */
+.site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: .5rem 1rem 1rem;
+    background: var(--blush);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 12px 24px rgba(64, 8, 73, .12);
+}
+
+.site-nav[hidden] { display: none; } /* author display:flex would otherwise beat [hidden] */
+
+.site-nav a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+    font-size: .9375rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.site-nav a:hover { color: var(--orange); }
+
+.logo {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.cart-link {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: var(--tap);
+    font-size: 0.875rem;
+}
+
+.cart-count {
+    display: grid;
+    place-items: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.25rem;
+    border-radius: 999px;
+    background: var(--orange);
+    color: var(--purple);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+
+/* =====================================================================
+   2. HERO  (<section class="hero">: background video, headline, buttons)
+   ===================================================================== */
+.hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: 78svh;
+    overflow: hidden;
+    background: var(--purple); /* shows while the video/poster loads */
+    color: #fff;
+}
+
+.hero_video {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* purple-tinted scrim keeps the headline readable over the bright, busy footage */
+.hero_overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(to top, rgba(64, 8, 73, .75), rgba(64, 8, 73, .25) 60%),
+        rgba(64, 8, 73, .35);
+}
+
+.hero_content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+.hero h1 {
+    margin: 0 0 1rem;
+    font-size: 2.5rem;
+    line-height: 1.05;
+    text-shadow: 0 2px 16px rgba(64, 8, 73, .45);
+}
+
+.hero p {
+    margin: 0 0 1.75rem;
+    max-width: 36ch;
+    font-size: 1.0625rem;
+    color: #fff;
+}
+
+.hero_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* outline button on a dark photo: white instead of purple */
+.hero .btn--outline { border-color: #fff; color: #fff; }
+.hero .btn--outline:hover { background: #fff; border-color: #fff; color: var(--purple); }
+.hero :focus-visible { outline-color: #fff; }
+
+
+/* =====================================================================
+   3. NEW ARRIVALS  (<section class="new-arrivals">: heading + product grid)
+   ===================================================================== */
+.new-arrivals {
+    background: var(--pink);
+    color: var(--purple);
+    padding: 48px 16px;
+}
+
+.new-arrivals .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+}
+
+.new-arrivals .head h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    line-height: 1.1;
+}
+
+.new-arrivals .head a {
+    font-size: 0.875rem;
+    text-decoration: underline;
+}
+
+.new-arrivals .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.new-arrivals .tile {
+    background: var(--blush);
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+/* the whole image is a link */
+.new-arrivals .tile a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.new-arrivals .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 55%;
+    transition: transform .3s;
+}
+
+.new-arrivals .tile a:hover img { transform: scale(1.04); }
+
+.new-arrivals .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.new-arrivals .row a { font-size: 0.9375rem; }
+
+/* wishlist heart: outline by default, filled when saved */
+.new-arrivals .row button {
+    display: grid;
+    place-items: center;
+    min-width: var(--tap);
+    min-height: var(--tap);
+    margin: -10px -12px -10px 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--purple);
+    cursor: pointer;
+}
+
+.new-arrivals .row button svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .2s, fill .2s;
+}
+
+.new-arrivals .row button:hover svg { transform: scale(1.12); }
+.new-arrivals .row button[aria-pressed="true"] svg { fill: var(--purple); }
+
+.new-arrivals .card p {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+
+/* =====================================================================
+   4. PROMO SPLIT  (<section class="promo-split">)
+   4a. Video slot (left on tablet/desktop, on top on phones)
+   4b. Customer photo gallery / fan carousel
+   ===================================================================== */
+.promo-split {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+/* ---- 4a. Video slot ---- */
+.video-slot {
+    position: relative;
+    width: 100%;
+    height: min(133vw, 80svh); /* always full width; height capped to the screen */
+    background: var(--pink);
+    overflow: hidden;
+}
+
+/* friendly placeholder until a real video is added (the video sits on top of it) */
+.video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    color: var(--pink);
+    text-align: center;
+    font-size: .8125rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.video-placeholder svg {
+    width: 56px;
+    height: 56px;
+    fill: none;
+    stroke: var(--pink);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.video-slot video,
+.video-slot iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* phones: video fills the whole section */
+    object-position: center;
+    border: 0;
+}
+
+/* ---- 4b. Customer photo gallery ---- */
+.gallery {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 28px 0 22px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+}
+
+.gallery h2 {
+    margin: 0 0 22px;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.1;
+    text-align: center;
+}
+
+.fan {
+    position: relative;
+    isolation: isolate;
+    --w: clamp(140px, 42vw, 210px);
+    --step: .62; /* spacing between fanned cards */
+}
+
+.stage {
+    position: relative;
+    height: calc(var(--w) * 4 / 3 + 36px);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+}
+
+.stage.dragging { cursor: grabbing; }
+.stage:focus-visible { outline-offset: -2px; }
+
+.slide {
+    --o: 0;
+    --a: 0;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: var(--w);
+    aspect-ratio: 3 / 4;
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--pink);
+    transform-origin: 50% 120%;
+    transform: translateX(calc(-50% + var(--o) * var(--w) * var(--step))) rotate(calc(var(--o) * 6deg)) scale(calc(1 - var(--a) * .17));
+    opacity: calc(1 - var(--a) * .22);
+    z-index: calc(10 - var(--a));
+    transition: transform .5s cubic-bezier(.22, .8, .3, 1), opacity .5s, box-shadow .5s;
+    box-shadow: 0 4px 14px rgba(64, 8, 73, .14);
+    will-change: transform;
+}
+
+.slide[data-active="true"] { box-shadow: 0 12px 28px rgba(64, 8, 73, .28); }
+
+.slide.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(64, 8, 73, .25);
+    transition: background .3s, transform .3s;
+}
+
+.dots i.on {
+    background: var(--purple);
+    transform: scale(1.25);
+}
+
+/* prev / next arrows (hidden on phones, swipe instead) */
+.nav {
+    display: none;
+    position: absolute;
+    top: calc(var(--w) * 2 / 3 + 8px);
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--blush);
+    color: var(--purple);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(64, 8, 73, .12);
+    transition: background .2s, opacity .2s;
+    z-index: 20;
+}
+
+.nav:hover { background: var(--pink); }
+.nav:disabled { opacity: 0; pointer-events: none; }
+.nav.prev { left: 0; }
+.nav.next { right: 0; }
+.nav svg { width: 16px; height: 16px; }
+
+
+/* =====================================================================
+   5. FEATURE STRIP  (<section class="strip">: three "why choose us" items)
+   ===================================================================== */
+.strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--blush);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+}
+
+.feature + .feature { border-top: 1px solid var(--line); }
+
+.feature svg {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    stroke: var(--purple);
+    fill: none;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.feature b {
+    display: block;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.feature span {
+    display: block;
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+
+/* =====================================================================
+   6. REVIEWS  (<section class="review">: heading, scrolling review cards)
+   ===================================================================== */
+.review {
+    padding: 40px 16px;
+    text-align: center;
+}
+
+.review h2 {
+    grid-column: 1 / -1;
+    margin: 0 0 24px;
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.review .track {
+    display: flex;
+    gap: 16px;
+    min-width: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    text-align: left;
+}
+
+.review .track::-webkit-scrollbar { display: none; }
+
+.review .card {
+    flex: 0 0 88%; /* phones: the next card peeks in, so people know it scrolls */
+    scroll-snap-align: start;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 72px 20px 20px;
+    position: relative;
+    background: var(--pink);
+}
+
+.review .card p { margin: .5rem 0; }
+
+.review .stars {
+    color: var(--purple);
+    letter-spacing: 2px;
+}
+
+.review .card img {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--blush); /* neutral circle if the photo is missing */
+}
+
+/* prev / next arrows (hidden on phones, swipe instead) */
+.review .prev,
+.review .next {
+    display: none;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--blush);
+    color: var(--purple);
+    cursor: pointer;
+}
+
+.review .prev svg,
+.review .next svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.review .prev:hover,
+.review .next:hover { background: var(--pink); }
+
+
+/* =====================================================================
+   7. FOOTER  (<footer class="foot">: logo, links, social icons, order box)
+   ===================================================================== */
+.foot {
+    background: var(--purple);
+    color: var(--pink);
+    padding: 3rem 1.5rem 1.5rem;
+}
+
+.foot h3 {
+    margin: 0 0 .75rem;
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.foot_main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.foot_logo {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.foot_logo small {
+    display: block;
+    margin-top: .4rem;
+    font-family: var(--font-sans);
+    font-size: .75rem;
+    letter-spacing: .3em;
+}
+
+.foot_links {
+    display: flex;
+    flex-direction: column;
+    font-size: .85rem;
+}
+
+.foot_links a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+}
+
+.foot_links a:hover,
+.icons a:hover { color: var(--orange); }
+
+.icons {
+    display: flex;
+    gap: .25rem;
+    font-size: 1.25rem;
+}
+
+.icons a {
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+}
+
+.foot_order p {
+    margin: 0 0 1rem;
+    font-size: .8125rem;
+    color: var(--pink);
+    max-width: 34ch;
+}
+
+/* footer buttons: pill shape, and a hover that stays visible on purple */
+.foot .btn { border-radius: 999px; }
+
+.foot .btn:hover {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--purple);
+}
+
+.foot_copy {
+    margin: 2rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(231, 176, 222, .25);
+    text-align: center;
+    font-size: .75rem;
+    color: var(--pink);
+}
+
+
+/* =====================================================================
+   8. UNUSED STYLES  (not in index.html yet — kept for later)
+   ===================================================================== */
+.category {
+    padding: 2rem 1.25rem;
+    background: var(--purple);
+    color: var(--pink);
+}
+
+
+/* =====================================================================
+   9. TABLET AND UP  (768px and wider) — same section order as above
+   ===================================================================== */
+@media (min-width: 768px) {
+
+    /* ---- 1. Header: no changes at this size ---- */
+
+    /* ---- 2. Hero ---- */
+    .hero { min-height: 82svh; }
+    .hero_content { padding: 4rem 4rem; }
+    .hero h1 { font-size: 4rem; }
+    .hero p { font-size: 1.1875rem; }
+
+    /* ---- 3. New Arrivals ---- */
+    .new-arrivals { padding: 48px 64px; }
+    .new-arrivals .grid { gap: 24px; }
+
+    /* ---- 4. Promo split: video on the left, gallery on the right ---- */
+    .promo-split {
+        grid-template-columns: 1fr 1fr;
+        min-height: 380px;
+    }
+
+    /* 4a. Video slot */
+    .video-slot {
+        height: auto;
+        min-height: 420px;
+    }
+
+    .video-slot video { object-fit: contain; } /* show the full clip */
+
+    /* 4b. Gallery */
+    .gallery { padding: 32px 24px; }
+    .fan { --w: clamp(130px, 15vw, 190px); }
+    .nav { display: flex; }
+
+    /* ---- 5. Feature strip: three columns ---- */
+    .strip { grid-template-columns: repeat(3, 1fr); }
+
+    .feature {
+        justify-content: center;
+        padding: 22px 16px;
+    }
+
+    .feature + .feature {
+        border-top: 0;
+        border-left: 1px solid var(--line);
+    }
+
+    /* ---- 6. Reviews: arrows on each side, two cards visible ---- */
+    .review {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        column-gap: 16px;
+        align-items: center;
+        padding: 48px 32px;
+    }
+
+    .review .prev,
+    .review .next { display: grid; }
+
+    .review .track { gap: 24px; }
+    .review .card { flex-basis: calc((100% - 24px) / 2); }
+
+    /* ---- 7. Footer: two columns ---- */
+    .foot_main { grid-template-columns: 1fr 1fr; }
+}
+
+
+/* =====================================================================
+   10. DESKTOP AND UP  (1024px and wider) — same section order as above
+   ===================================================================== */
+@media (min-width: 1024px) {
+
+    /* ---- 1. Header: no changes at this size ---- */
+    /* ---- 2. Hero: no changes at this size ---- */
+
+    /* ---- 3. New Arrivals: four products per row ---- */
+    .new-arrivals .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    /* ---- 4. Promo split ---- */
+    .gallery { padding: 32px 40px; }
+
+    /* ---- 5. Feature strip ---- */
+    .feature { padding: 22px 28px; }
+
+    /* ---- 6. Reviews: three cards visible ---- */
+    .review { padding: 48px 64px; }
+    .review .card { flex-basis: calc((100% - 48px) / 3); }
+
+    /* ---- 7. Footer: four columns ---- */
+    .foot { padding: 3.5rem 4rem 1.5rem; }
+
+    .foot_main {
+        grid-template-columns: 1.2fr .8fr .8fr 1.6fr;
+        align-items: start;
+    }
+}
+
+
+/* =====================================================================
+   11. REDUCED MOTION  (people who turn off animations) — same section order
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+    html { scroll-behavior: auto; }
+
+    /* ---- 1. Header: burger icon animation off ---- */
+    .menu-btn_burger,
+    .menu-btn_burger::before,
+    .menu-btn_burger::after { transition: none; }
+
+    /* ---- 2. Hero: show the still poster instead of the video ---- */
+    .hero_video { display: none; }
+    .hero { background: var(--purple) url("images/hero-poster.jpg") center / cover no-repeat; }
+
+    /* ---- 3. New Arrivals: no zoom on hover ---- */
+    .new-arrivals .tile img { transition: none; }
+
+    /* ---- 4. Promo split: gallery cards don't animate ---- */
+    .slide { transition: none; }
+}
